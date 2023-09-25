@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {LoggingService} from "../logging.service";
+import {AccountsService} from "../accounts.service";
 
 @Component({
   selector: 'app-account',
@@ -10,12 +11,16 @@ import {LoggingService} from "../logging.service";
 export class AccountComponent {
   @Input() account: {name: string, status: string};
   @Input() id: number;
-  @Output() statusChanged = new EventEmitter<{id: number, newStatus: string}>();
 
-  constructor(private loggingService: LoggingService) {}
+  private loggingService: LoggingService;
+  private accountService: AccountsService;
+  constructor() {
+    this.loggingService = inject(LoggingService);
+    this.accountService = inject(AccountsService)
+  }
 
   onSetTo(status: string) {
-    this.statusChanged.emit({id: this.id, newStatus: status});
-    this.loggingService.logStatusChange(status);
+    this.accountService.updateAccount(this.id, status);
+    this.loggingService.logStatusChange(this.account.name, status);
   }
 }
