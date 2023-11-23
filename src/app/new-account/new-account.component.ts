@@ -15,6 +15,10 @@ export class NewAccountComponent {
   }
 
   onCreateAccount(accountName: string, accountStatus: string) {
+    if (accountName.length < 3) {
+      alert(`Name is too short, try again!`)
+      return;
+    }
     this.accountService.addAccount(accountName, accountStatus);
     // this.loggingService.logStatusChange(accountName, accountStatus);
   }
